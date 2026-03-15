@@ -1,0 +1,80 @@
+version: '3.8'
+
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.9.1
+  environment:
+    # Use our Postgres DB instead of SQLite
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://darktrace_admin:securepassword123@postgres-dw:5432/threat_intelligence
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+  volumes:
+    # Mount your local directories into the container
+    - ./dags:/opt/airflow/dags
+    - ./scripts:/opt/airflow/scripts
+    - ./data:/opt/airflow/data
+  networks:
+    - data_network
+  depends_on:
+    - postgres-dw
+
+services:
+  postgres-dw:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: darktrace_admin
+      POSTGRES_PASSWORD: securepassword123
+      POSTGRES_DB: threat_intelligence
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - data_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@darktrace.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-dw
+    networks:
+      - data_network
+
+  airflow-init:
+    <<: *airflow-common
+    command: version
+    environment:
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://darktrace_admin:securepassword123@postgres-dw:5432/threat_intelligence
+      - _AIRFLOW_DB_MIGRATE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+      - _AIRFLOW_WWW_USER_FIRSTNAME=Data
+      - _AIRFLOW_WWW_USER_LASTNAME=Engineer
+      - _AIRFLOW_WWW_USER_ROLE=Admin
+      - _AIRFLOW_WWW_USER_EMAIL=admin@darktrace.local
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      - airflow-init
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    depends_on:
+      - airflow-init
+
+networks:
+  data_network:
+    driver: bridge
+
+volumes:
+  pg_data:
