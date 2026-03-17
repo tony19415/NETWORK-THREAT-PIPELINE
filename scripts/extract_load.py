@@ -65,7 +65,7 @@ if __name__ == "__main__":
     RAW_FILE_PATH = "data/raw/Friday-WorkingHours.csv"
     GDPR_SALT = "darktrace_secure_salt_2026"
 
-    DB_URI = "postgresql://darktrace_admin:securepassword123@localhost:5433/threat_intelligence"
+    DB_URI = "postgresql+psycopg2://darktrace_admin:securepassword123@postgres-dw:5432/threat_intelligence"
 
     try:
         raw_df = extract_and_clean(RAW_FILE_PATH)
