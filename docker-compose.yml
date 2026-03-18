@@ -1,13 +1,15 @@
-version: '3.8'
+# version: '3.8'
 
 x-airflow-common:
   &airflow-common
-  image: apache/airflow:2.9.1
+  image: apache/airflow:2.9.1-python3.11
   environment:
     # Use our Postgres DB instead of SQLite
     - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://darktrace_admin:securepassword123@postgres-dw:5432/threat_intelligence
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__WEBSERVER_SECRET_KEY=darktrace_shared_secret_2026
+    - _PIP_ADDITIONAL_REQUIREMENTS=pandas==2.0.3 psycopg2-binary==2.9.9
   volumes:
     # Mount your local directories into the container
     - ./dags:/opt/airflow/dags

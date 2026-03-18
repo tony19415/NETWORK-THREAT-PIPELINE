@@ -27,7 +27,9 @@ with DAG(
     # Use Python3 and absolute container paths since Airflow runs on Linux in Docker
     run_ingestion = BashOperator(
         task_id='execute_extract_load_script',
-        bash_command='python3 /opt/airflow/scripts/extract_load.py',
+        # bash_command='python3 /opt/airflow/scripts/extract_load.py',
+        bash_command='python scripts/extract_load.py',
+        cwd='/opt/airflow',
     )
 
     run_ingestion

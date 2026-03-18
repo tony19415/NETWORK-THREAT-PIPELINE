@@ -56,8 +56,7 @@ def load_to_postgres(df: pd.DataFrame, db_uri: str, table_name: str):
     
     engine = create_engine(db_uri)
 
-    with engine.begin() as connection:
-        df.to_sql(table_name, con=connection, schema='public', if_exists='replace', index=False)
+    df.to_sql(table_name, con=engine, schema='public', if_exists='replace', index=False)
     
     logging.info("Data ingestion completed successfully.")
 

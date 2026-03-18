@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw_network_data
+    description: "The raw layer containing our ingested threat intelligence logs."
+    schema: public
+    tables:
+      - name: raw_network_logs
