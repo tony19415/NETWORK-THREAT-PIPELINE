@@ -31,6 +31,8 @@ Raw data loaded into the `public` schema is transformed via dbt into a clean `an
 ## The Visualization Layer
 The final Data Marts feed directly into a PowerBI SOC (Security Operations Center) dashboard. The dashboard utilizes quadrant-based information design (Scatter Plot) to map attacker behavior and a dynamic time-series topology (Line Chart) to visualize exact moments of network compromise.
 
+[image](Security_Operations_Center.png)
+
 ## How to Run Locally
 1. Clone the repository.
 2. Initialize the infrastructure: `docker-compose up -d`
