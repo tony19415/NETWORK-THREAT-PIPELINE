@@ -1,4 +1,5 @@
-# Enterprise Network Threat Intelligence Pipeline (ELT)
+# Network Threat Intelligence Pipeline
+Cross-Cloud Medallion Architecture (GCP + AWS Databricks)
 
 ## Project Overview
 Resilient, end to end data engineering pipeline designed to ingest, transform, and analyze high velocity network traffic logs to identify security threats (DDoS and PortScans). It demonstrates a Multi Cloud Lakehouse approach, moving data from Google Cloud Storage and BigQuery into a Databricks Serverless environment for advanced spark processing.
